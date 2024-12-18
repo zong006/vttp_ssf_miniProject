@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Articles</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+    
+    <table>
+        <tr th:each="article : ${articles}">
+            <table>
+                <tr>
+                    <h3 th:text="${article.title}"></h3>    
+                </tr>
+                <tr>
+                    <td>
+                        <img th:src="${article.section == 'Crosswords' ? '/images/crossword.jpg' : (article.imageUrl != null ? article.imageUrl : '/images/placeholder.jpg')}" 
+                         alt="Article Image">
+                    </td>
+                    <td>
+                        <p th:text="'Category: '+${article.section}"></p>
+                        <br>
+                        <p th:text="'Published on: '+${article.date} "></p>
+                        <br>
+                        <a th:href="${article.url}">Link to Article</a>
+                        <br>
+                        <br>
+                        <form th:action="@{/latest}" method="post">
+                            <input type="hidden" name="id" th:value="${article.id}">
+                            <input type="hidden" name="section" th:value="${article.section}">
+                            <input type="hidden" name="page" th:value="${currentPage}">
+                            <button type="submit">Save Article</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </tr>
+    </table>
+    <br>
+    <div>
+        <form th:action="@{/latest}" method="get">
+            <input type="hidden" name="page" th:value="${currentPage+1}">
+            <button type="submit">Next Page</button>
+        </form>
+    </div>
+</body>
+</html>
+

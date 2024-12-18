@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <form th:action="@{/create}" method="post" th:object="${user}">
+        <table>
+            <tr>
+                <label for="username">Username:</label>
+                <input type="text" th:field="*{username}" placeholder="Enter your username" required>
+                <p th:if="*{#fields.hasErrors('username')}" th:errors="*{username}" class="error"></p>
+            </tr>
+            <tr>
+                <h3>Select Topics of Interest:</h3>
+                <p th:if="*{#fields.hasErrors('topicsOfInterest')}" th:errors="*{topicsOfInterest}" class="error"></p>
+            </tr>    
+            <tr>
+                <div th:each="section : ${session.sectionMap}">
+                    <input type="checkbox" th:field="*{topicsOfInterest}" th:value="${section.value}" th:id="${section.value}">
+                    <label th:for="${section.value}" th:text="${section.key}"></label>
+                </div>
+            </tr>
+        </table>
+        <button type="submit">Submit</button>  
+    </form>
+</body>
+</html>
