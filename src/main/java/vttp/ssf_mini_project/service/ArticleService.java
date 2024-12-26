@@ -162,28 +162,21 @@ public class ArticleService {
                 }
             }
         }
+        int recSize = 5;  
+        if (topicsToRec.isEmpty() || topicsToRec.size() < recSize){
+            int numberOfTopics = recSize - topicsToRec.size();
+            List<String> popTopics = getMostPopularTopics(numberOfTopics);
+            topicsToRec.addAll(popTopics); 
+        }
 
         Map<String, String> sectionsMap = getSections();
 
         Map<String, String> recSectionMap = sectionsMap.entrySet().stream()
             .filter(entry -> topicsToRec.contains(entry.getValue())) // Keep entries with values in the list
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        System.out.println("initial rec map: " + recSectionMap.toString()); // remove this later
-        int recSize = 5;    
-        if (recSectionMap.isEmpty() || recSectionMap.size() < recSize){
-            Random r = new Random();
-            
-            for (String key : sectionsMap.keySet()){
-                if (!recSectionMap.containsKey(key)){
-                    if (r.nextDouble() < 0.2){ // if no users are similar, randomly reccomend 5 topics 
-                        recSectionMap.put(key, sectionsMap.get(key));
-                    }
-                    if (recSectionMap.size()>= recSize){
-                        break;
-                    }
-                }
-            }
-        }
+
+        System.out.println("rec map: " + recSectionMap.toString()); // remove this later
+        
         return recSectionMap;
     }
 
@@ -194,9 +187,9 @@ public class ArticleService {
 
         for (String user : allUserPrefMap.keySet()){
             if (!username.equals(user)){
-                Map<String, Integer> userA = allUserPrefMap.get(username);
-                Map<String, Integer> userB = allUserPrefMap.get(user);
-                double cosScore = calcSimScore(userA, userB);
+                Map<String, Integer> currentUser = allUserPrefMap.get(username);
+                Map<String, Integer> otherUser = allUserPrefMap.get(user);
+                double cosScore = calcSimScore(currentUser, otherUser);
                 if (cosScore > 0){
                     userScores.put(user, cosScore);
                 }
@@ -238,6 +231,25 @@ public class ArticleService {
         double magB_sqrt = Math.sqrt(magB);
 
         return (magA_sqrt == 0 || magB_sqrt == 0) ? 0 : dotProduct / (magA_sqrt * magB_sqrt);
+    }
+
+    private List<String> getMostPopularTopics(int numberOfTopics) throws JsonMappingException, JsonProcessingException{
+        Map<String, Map<String, Integer>> allUserPrefMap = userService.getAllUserPrefMap();
+        Map<String, Integer> popularTopics = new HashMap<>();
+
+        for (Map<String, Integer> userTopicCount : allUserPrefMap.values()){
+            for (Map.Entry<String, Integer> entry : userTopicCount.entrySet()){
+                String topic = entry.getKey();
+                Integer count = entry.getValue();
+                popularTopics.merge(topic, count, Integer::sum);
+            }
+        }
+        List<Map.Entry<String, Integer>> topPopularTopics = popularTopics.entrySet().stream()
+                                                            .sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()))
+                                                            .limit(numberOfTopics)
+                                                            .toList();
+
+        return topPopularTopics.stream().map(entry -> entry.getKey()).toList();
     }
 
     private JsonReader generateJson(String url){

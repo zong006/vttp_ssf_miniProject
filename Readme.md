@@ -38,7 +38,7 @@
 
 - to retrieve article according to id, use https://content.guardianapis.com/ + {id} + ?&api-key=d526b545-40c8-402c-ae7b-16691d574c61 
     - see https://open-platform.theguardian.com/documentation/item
-- to get articles according to section, use https://content.guardianapis.com/ + {section} + ?&api-key=d526b545-40c8-402c-ae7b-16691d574c61
+- to get articles according to section, use https://content.guardianapis.com/ + {section} + ?&api-key=
 - the OR operator in query is | 
 - both search query and latest news share the same view and hence same nextPage endpoint (since both get articles from single url). newsfeed on the other hand, gets articles from multiple urls (diff sections etc) hence it will have its own endpoint
 
