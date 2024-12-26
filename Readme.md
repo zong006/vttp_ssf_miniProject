@@ -40,6 +40,7 @@
     - see https://open-platform.theguardian.com/documentation/item
 - to get articles according to section, use https://content.guardianapis.com/ + {section} + ?&api-key=d526b545-40c8-402c-ae7b-16691d574c61
 - the OR operator in query is | 
+- both search query and latest news share the same view and hence same nextPage endpoint (since both get articles from single url). newsfeed on the other hand, gets articles from multiple urls (diff sections etc) hence it will have its own endpoint
 
 
 #### kpi
@@ -50,8 +51,3 @@
 - 3 views or more: already done
 - support omre than 1 user: via httpsessions (in progress)
     - how to ensure that no duplicate usernames in database? to have a create new user and also login page seperately?
-
-#### for generating similar related words
-https://www.datamuse.com/api/
-
-example: https://api.datamuse.com/words?rel_jjb=law&topics=law

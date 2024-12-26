@@ -1,0 +1,61 @@
+
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+body {
+    background-image: url('/images/world-map.jpg');
+    background-size: 100% 100%; 
+    background-position: center center; 
+    background-attachment: fixed; 
+    height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); 
+    z-index: 1;
+}
+
+
+
+.container {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    text-align: center;
+    margin-top: -50px; 
+}
+
+form p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+button:hover {
+    opacity: 0.8;
+}

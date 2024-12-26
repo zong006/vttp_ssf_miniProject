@@ -1,103 +1,193 @@
-/* Basic Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    padding: 20px;
+    background-color: #121212; 
+    color: #e0e0e0; 
 }
 
-/* Container for the table */
-table {
-    width: 100%;
-    margin-bottom: 20px;
-    border-spacing: 10px;
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 1.0);
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Image styling */
-img {
-    width: 150px;   /* Set a fixed width for all images */
-    height: 150px;  /* Set a fixed height for all images */
-    object-fit: cover;  /* Ensure the image scales properly */
-    border-radius: 10px;  /* Optional: rounded corners for images */
+.header-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background: url('/images/world-map.jpg') center/cover no-repeat;
+    position: relative; 
+    padding: 40px 0;
+    animation: scrollBackground 20s linear infinite; 
+    z-index: 2;
 }
 
-/* Article title */
-h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 10px;
+.header-content::before {
+    content: ''; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6); 
+    z-index: -10; 
 }
 
-/* Table cell styling */
-td {
-    padding: 10px;
-    vertical-align: middle;
+@keyframes scrollBackground {
+    0% {
+        background-position: center top; 
+    }
+    100% {
+        background-position: center bottom; 
+    }
 }
 
-/* Column layout for the content */
-td:first-child {
-    width: 160px;  /* Fixed width for the image column */
-}
-
-td:last-child {
-    max-width: 800px;
-}
-
-/* Styling for the article category and publication date */
-p {
-    font-size: 1rem;
-    color: #555;
-}
-
-/* Link styling */
-a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Button styling */
-button {
-    background-color: #007bff;
-    color: white;
+.search-bar input[type="text"] {
+    border: 1px solid #ccc;
+    border-radius: 20px;
     padding: 8px 15px;
+    z-index: 2;
+}
+
+button {
+    background: #007bff;
+    color: white;
     border: none;
+    padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
-    margin-top: 10px;
+    transition: background-color 0.3s;
+    z-index: 2;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background: #0056b3;
 }
 
-/* Styling for 'Next Page' button */
-div form button {
-    background-color: #28a745;
-    padding: 10px 20px;
+
+.card {
+    height: 540px; 
+    background-color: #f8f9fa; 
+    width: 700px;
+    margin-left: 45px;
+    margin-right: -10px; 
+    display: flex;
+    flex-direction: column;
 }
 
-div form button:hover {
-    background-color: #218838;
+
+.card-body {
+    position: relative; 
+    flex-grow: 1; 
+    padding: 20px;
 }
 
-/* Optional: Center the article titles and content */
-h3, p {
-    text-align: left;
+
+.card-body form {
+    position: absolute;
+    bottom: 20px;
+    left: 20px; 
+    width: auto; 
+    padding: 0; 
 }
 
-.error {
-    color: red;
-    font-size: 0.9em;
+
+.card-body form button {
+    padding: 10px 20px; 
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: auto; 
 }
 
+
+.card-body form button:hover {
+    background: #0056b3;
+}
+
+
+.card-title {
+    font-size: 1.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    font-weight: 700;
+    color: #343a40; 
+    max-width: 100%; 
+    transition: all 0.3s ease; 
+}
+
+
+.card-title:hover {
+    white-space: normal; 
+    text-overflow: unset;
+    max-width: none;
+}
+
+
+.card-text {
+    font-size: 0.9rem;
+    height: 60px; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+
+.card-img-top {
+    height: auto;  
+    object-fit: fill; 
+    width: 100%; 
+    height: 350px; 
+}
+
+
+.sticky-sidebar {
+    position: sticky;
+    top: 0; 
+    height: 100vh; 
+    overflow-y: auto; 
+}
+
+
+.sticky-right {
+    position: sticky;
+    top: 20px;
+    background: rgba(248, 249, 250, 0.8); 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1; 
+}
+
+.list-group-item {
+    border: none;
+    transition: background-color 0.3s;
+    color: #000000; 
+    padding: 10px;
+}
+
+.list-group-item:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+
+.sticky-heading {
+    position: sticky;
+    top: 0;
+    background-color: #000000; 
+    padding: 10px;
+    font-size: 1.2rem;
+    color: #ffffff; 
+    z-index: 10;
+}
+
+.pagination .page-item {
+    margin-right: 5px; 
+}

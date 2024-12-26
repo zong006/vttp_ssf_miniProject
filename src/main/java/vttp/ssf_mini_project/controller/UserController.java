@@ -1,21 +1,24 @@
 package vttp.ssf_mini_project.controller;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vttp.ssf_mini_project.model.User;
 import vttp.ssf_mini_project.service.ArticleService;
 import vttp.ssf_mini_project.service.UserService;
-import vttp.ssf_mini_project.util.Util;
 
 @Controller
 public class UserController {
@@ -25,9 +28,6 @@ public class UserController {
 
     @Autowired
     ArticleService articleService;
-
-    @Value("${api_key}") 
-    private String api_key;
 
     @GetMapping("/")
     public String landingPage(){
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String verifyLogin(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession httpSession, Model model){
+    public String verifyLogin(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession httpSession, Model model) throws JsonMappingException, JsonProcessingException{
 
         if (bindingResult.hasErrors()){
             return "loginPage";
@@ -49,6 +49,10 @@ public class UserController {
         if (userService.userExists(user.getUsername())){
             List<String> topicsOfInterest = userService.getUserPref(user.getUsername());
             user.setTopicsOfInterest(topicsOfInterest);
+            Deque<String> queries = userService.getQueryEntries(user.getUsername());
+            user.setQueryHist(queries);
+            // need to set user query deque
+            System.out.println(user.toString()); // delete this later
             httpSession.setAttribute("user", user);
             
             return "redirect:/latest";
@@ -59,9 +63,9 @@ public class UserController {
 
     @GetMapping("/create")
     public String newUserPage(HttpSession httpSession, Model model){
-        String url = Util.newsUrl + Util.newsSectionQuery + Util.newsApiEntry + api_key;
+        
         model.addAttribute("user", new User());
-        Map<String, String> sectionMap = articleService.getSections(url);
+        Map<String, String> sectionMap = articleService.getSections();
 
         httpSession.setAttribute("sectionMap", sectionMap);
         
@@ -69,7 +73,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String postLoginDetails(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model, HttpSession httpSession){
+    public String postLoginDetails(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model, HttpSession httpSession) throws JsonProcessingException{
         
         
         if (bindingResult.hasErrors()){
@@ -77,21 +81,29 @@ public class UserController {
             return "newUserPage";
         }
 
-        httpSession.setAttribute("user", user); 
+        httpSession.setAttribute("user", user);
+        User u = (User) httpSession.getAttribute("user"); //
+        System.out.println(u.getUsername()); //
         // System.out.println(httpSession.getAttribute(user.getUsername()));
         
         if (userService.userExists(user.getUsername())){
             System.out.println("user exsits"); // delete this later
             model.addAttribute("errorMessageUser", "Username already exists. Please choose another username.");
-            return "redirect:/create";
+            return "errorPage";
         }
-        // save the preferences into redis
-        userService.saveUserPref(user.getUsername(), user.getTopicsOfInterest());
+        // a new user. pass the topics of interest as a list to the service to be processed
+        System.out.println("a new user"); // delete this later
+        userService.updateUserPref(user.getUsername(), user.getTopicsOfInterest());
 
         return "redirect:/latest";
     }
 
-   
+    @PostMapping("/logout")
+    public String logout(HttpSession httpSession){
+        httpSession.removeAttribute("user");
+        httpSession.invalidate();
 
+        return "redirect:/";
+    }
 
 }

@@ -4,48 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Feed</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
-
 </head>
 <body>
-    
-    <table>
-        <tr th:each="article : ${articles}">
-            <table>
-                <tr>
-                    <h3 th:text="${article.title}"></h3>    
-                </tr>
-                <tr>
-                    <td>
-                        <img th:src="${article.section == 'Crosswords' ? '/images/crossword.jpg' : (article.imageUrl != null ? article.imageUrl : '/images/placeholder.jpg')}" 
-                         alt="Article Image">
-                    </td>
-                    <td>
-                        <p th:text="'Category: '+${article.section}"></p>
-                        <br>
-                        <p th:text="'Published on: '+${article.date} "></p>
-                        <br>
-                        <a th:href="${article.url}">Link to Article</a>
-                        <br>
-                        <br>
-                        <form th:action="@{/feed}" method="post">
-                            <input type="hidden" name="id" th:value="${article.id}">
-                            <input type="hidden" name="section" th:value="${article.section}">
-                            <input type="hidden" name="page" th:value="${currentPage}">
-                            <button type="submit">Save Article</button>
-                        </form>
-                    </td>
-                </tr>
-            </table>
-        </tr>
-    </table>
-    <br>
-    <div>
-        <form th:action="@{/feed}" method="get">
-            <input type="hidden" name="page" th:value="${currentPage+1}">
-            <button type="submit">Next Page</button>
-        </form>
-    </div>
+    <header class="sticky-header">
+        <div class="header-content container">
+            <form th:action="@{/latest}" method="get" >
+                <button type="submit" class="btn btn-primary">Return to Latest News</button>
+            </form>
+            <h1 class="text-white text-center my-3" th:text="${session.headerTitle}"></h1>
+            <form th:action="@{/search}" method="GET" class="search-bar d-flex justify-content-center">
+                <span class="search-text">Search for articles</span>
+                <input type="text" name="query" class="form-control w-50 me-2" placeholder="Search...">
+                <input type="hidden" name="page" th:value="${session.latestPage}">
+                <button type="submit" class="btn btn-outline-light">Search</button>
+            </form>
+
+            <form th:action="@{/logout}" method="POST" class="ms-2">
+                <button type="submit" class="btn btn-outline-light">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <main class="container my-4">
+        <div class="row">
+            <!-- Left column for articles -->
+            <div class="col-md-8">
+                <div class="card-deck" th:each="article : ${articles}">
+                    <div class="card mb-4 shadow-sm">
+                        <img class="card-img-top" th:src="${article.section == 'Crosswords' ? '/images/crossword.jpg' : (article.imageUrl != null ? article.imageUrl : '/images/placeholder.jpg')}" alt="Article Image">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${article.title}"></h5>
+                            <p class="card-text">
+                                <span th:text="'Category: ' + ${article.section}"></span><br>
+                                <span th:text="'Published on: ' + ${#dates.format(new java.util.Date(article.date), 'yyyy-MM-dd HH:mm:ss Z')}"></span>
+                            </p>
+                            <form th:action="@{/track}" method="post" target="_blank">
+                                <input type="hidden" name="sectionId" th:value="${article.sectionId}">
+                                <input type="hidden" name="url" th:value="${article.url}">
+                                <input type="hidden" name="page" th:value="${session.latestPage}">
+                                <button class="btn btn-primary" type="submit">Go to Article</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav th:if="${articles != null && !articles.isEmpty()}" class="mt-4">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${session.latestPage >= 2}">
+                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage-1})}">Previous</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage+1})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div th:if="${articles.isEmpty()}" class="text-center">
+                    <h3 th:text="${noArticleMsg}"></h3>
+                    <form th:action="@{/latest}" method="get">
+                        <input type="hidden" name="page" th:value="${session.latestPage}">
+                        <button class="btn btn-primary mt-3">Back</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right column (sticky) -->
+            <div class="col-md-4">
+                <div class="sticky-sidebar">
+                    <h3 class="sticky-heading">Topics you might like</h3>
+                    <div class="list-group">
+                        <a th:each="section : ${topicsToRec}" th:href="@{/toSection(sectionId=${section.value}, sectionKey=${section.key})}" 
+                        class="list-group-item list-group-item-action" th:text="${section.key}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

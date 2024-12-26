@@ -1,0 +1,108 @@
+
+body {
+    background-color: #000;
+    background-image: url('/images/world-map.jpg');
+    background-size: 100% 100%; 
+    background-position: top center;
+    background-attachment: fixed;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    overflow: auto; 
+    font-size: 14px;
+}
+
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    z-index: -1;
+}
+
+
+
+label {
+    margin-left: 8px; 
+}
+
+label[for="username"] {
+    font-size: 18px; 
+    font-weight: bold; 
+}
+
+
+form {
+    z-index: 2;
+    text-align: left; 
+    width: 100%; 
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.form-control-custom {
+    width: auto;
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.login-form {
+    z-index: 2; 
+    text-align: center; 
+    width: 100%; 
+    padding: 20px;
+    margin-top: 20px; 
+}
+
+
+h2 {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 80%;
+    max-width: 400px;
+}
+
+button {
+    padding: 10px 20px;
+    display: block;
+    margin: 20px auto;
+}
+/*  error box styling */
+.error-box {
+    background-color: rgba(220, 53, 69, 0.2); 
+    border: 1px solid rgba(220, 53, 69, 0.5); 
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 5px; 
+    display: inline-block;
+    width: auto; 
+    max-width: none; 
+    white-space: nowrap; 
+}
+
+
+.form-group {
+    position: relative; 
+    margin-bottom: 20px; 
+}
+
+
+.row {
+    margin-bottom: 20px; 
+}

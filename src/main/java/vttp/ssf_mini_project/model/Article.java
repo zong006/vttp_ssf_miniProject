@@ -7,7 +7,14 @@ public class Article {
     private String section;
     private Long date;
     private String imageUrl;
+    private String sectionId;
     
+    public String getSectionId() {
+        return sectionId;
+    }
+    public void setSectionId(String sectionId) {
+        this.sectionId = sectionId;
+    }
     public String getImageUrl() {
         return imageUrl;
     }

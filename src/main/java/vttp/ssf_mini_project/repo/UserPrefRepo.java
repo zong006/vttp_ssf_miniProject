@@ -1,6 +1,6 @@
 package vttp.ssf_mini_project.repo;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,18 +15,19 @@ public class UserPrefRepo {
         @Qualifier(Util.template)
         RedisTemplate<String, String> stringTemplate;
 
-        public void saveUserPref(String id, List<String> entry){
-            stringTemplate.opsForList().leftPushAll(id, entry);
+        public void saveUserInfo(String key, String id, String entry){
+            stringTemplate.opsForHash().put(key , id, entry);
         }
 
-        public List<String> getUserPref(String id){
-            Long lengthOfList = stringTemplate.opsForList().size(id);
-            return stringTemplate.opsForList().range(id, 0, lengthOfList);
+        public String getUserInfo(String key, String id){
+            return (String) stringTemplate.opsForHash().get(key, id);
         }
 
         public boolean userExists(String id){
-            return stringTemplate.hasKey(id);
+            return stringTemplate.opsForHash().hasKey(Util.interests, id);
         }
 
-        // add method to modify user pref
+        public Map<Object, Object> getPrefEntries(){
+            return stringTemplate.opsForHash().entries(Util.interests);
+        }
 }
