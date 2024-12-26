@@ -206,31 +206,27 @@ public class ArticleService {
 
     private double calcSimScore(Map<String, Integer> userA, Map<String, Integer> userB){
         // this calculates the cosine similarity as a score between 2 users
-        double dotProduct = 0;
+        double numerator = 0;
         double magA = 0;
         double magB = 0;
-        int n = 0;  //  number of common topics
 
         for (String topic : userA.keySet()) {
             if (userB.containsKey(topic)) {
                 double x = userA.get(topic);  
                 double y = userB.get(topic);  
 
-                dotProduct += x * y;
+                numerator += x * y;
                 magA += Math.pow(x, 2);
                 magB += Math.pow(y, 2);
-                n += 1;
             }
-        }
-
-        
-        if (n == 0) { //  no common topics  -> no similarity -> zero score
+        } 
+        if (numerator==0){
             return 0;
         }
         double magA_sqrt = Math.sqrt(magA);
         double magB_sqrt = Math.sqrt(magB);
 
-        return (magA_sqrt == 0 || magB_sqrt == 0) ? 0 : dotProduct / (magA_sqrt * magB_sqrt);
+        return numerator / (magA_sqrt * magB_sqrt);
     }
 
     private List<String> getMostPopularTopics(int numberOfTopics) throws JsonMappingException, JsonProcessingException{
