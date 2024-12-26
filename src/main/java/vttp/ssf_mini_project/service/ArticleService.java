@@ -177,8 +177,11 @@ public class ArticleService {
             .filter(entry -> topicsToRec.contains(entry.getValue())) // Keep entries with values in the list
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+        if (recSectionMap.size() < 5){
+            Map<String, Map<String, String>> topicSplit = splitTopics();
+            recSectionMap.putAll(topicSplit.get("popular"));
+        }
         System.out.println("rec map: " + recSectionMap.toString()); // remove this later
-        
         return recSectionMap;
     }
 
@@ -283,6 +286,27 @@ public class ArticleService {
         }
     }
 
+    public Map<String, Map<String, String>> splitTopics(){
+        // to split all topics into 5 "popular topics" and others
+        Map<String, String> allTopics = getSections();
+        Map<String, String> popTopics = new HashMap<>();
+
+        popTopics.put("World news", "world");
+        popTopics.put("Technology", "technology");
+        popTopics.put("Environment", "environment");
+        popTopics.put("Life and style","lifeandstyle");
+        popTopics.put("Film", "film");
+
+        for (Map.Entry<String, String> entry : popTopics.entrySet()){
+            allTopics.remove(entry.getKey());
+        }
+
+        Map<String, Map<String, String>> topicSplit = new HashMap<>();
+        topicSplit.put("popular", popTopics);
+        topicSplit.put("others", allTopics);
+
+        return topicSplit;
+    }
 
 
 }

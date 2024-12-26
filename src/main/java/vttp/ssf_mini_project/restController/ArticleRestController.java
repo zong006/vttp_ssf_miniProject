@@ -3,6 +3,7 @@ package vttp.ssf_mini_project.restController;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,7 @@ public class ArticleRestController {
     private String api_key;
 
     @GetMapping("/{query}")
-    public ResponseEntity<?> getEntry(@PathVariable String query) throws ParseException, IOException{
+    public ResponseEntity<Object> getEntry(@PathVariable String query) throws ParseException, IOException{
         String url = Util.newsUrl + Util.newsSearchQuery + Util.newsSearchQueryEntry + query + Util.newsApiEntry + api_key;
 
         try {
@@ -60,5 +61,12 @@ public class ArticleRestController {
             
             return ResponseEntity.badRequest().body(e.getResponseBodyAsString());
         }
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        Map<String, Map<String, String>>res = articleService.splitTopics();
+
+        return ResponseEntity.ok().body(res.toString());
     }
 }
