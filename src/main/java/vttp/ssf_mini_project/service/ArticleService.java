@@ -200,7 +200,7 @@ public class ArticleService {
                 userScores.put(user, cosScore);
             }
         }
-        System.out.println(userScores); // remove this later
+        // System.out.println(userScores); // remove this later
         return userScores.entrySet().stream()
                 .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  
                 .limit(2)  
