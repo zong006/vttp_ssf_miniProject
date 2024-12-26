@@ -169,21 +169,21 @@ public class ArticleService {
             .filter(entry -> topicsToRec.contains(entry.getValue())) // Keep entries with values in the list
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         System.out.println("initial rec map: " + recSectionMap.toString()); // remove this later
-        // int recSize = 5;    
-        // if (recSectionMap.isEmpty() || recSectionMap.size() < recSize){
-        //     Random r = new Random();
+        int recSize = 5;    
+        if (recSectionMap.isEmpty() || recSectionMap.size() < recSize){
+            Random r = new Random();
             
-        //     for (String key : sectionsMap.keySet()){
-        //         if (!recSectionMap.containsKey(key)){
-        //             if (r.nextDouble() < 0.2){ // if no users are similar, randomly reccomend 5 topics 
-        //                 recSectionMap.put(key, sectionsMap.get(key));
-        //             }
-        //             if (recSectionMap.size()>= recSize){
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
+            for (String key : sectionsMap.keySet()){
+                if (!recSectionMap.containsKey(key)){
+                    if (r.nextDouble() < 0.2){ // if no users are similar, randomly reccomend 5 topics 
+                        recSectionMap.put(key, sectionsMap.get(key));
+                    }
+                    if (recSectionMap.size()>= recSize){
+                        break;
+                    }
+                }
+            }
+        }
         return recSectionMap;
     }
 
@@ -197,10 +197,13 @@ public class ArticleService {
                 Map<String, Integer> userA = allUserPrefMap.get(username);
                 Map<String, Integer> userB = allUserPrefMap.get(user);
                 double cosScore = calcSimScore(userA, userB);
-                userScores.put(user, cosScore);
+                if (cosScore > 0){
+                    userScores.put(user, cosScore);
+                }
+                
             }
         }
-        // System.out.println(userScores); // remove this later
+        System.out.println(userScores); // remove this later
         return userScores.entrySet().stream()
                 .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  
                 .limit(2)  

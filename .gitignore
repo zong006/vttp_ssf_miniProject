@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-.gitattributes
-.gitignore
-.DS_Store
