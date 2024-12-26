@@ -162,11 +162,13 @@ public class ArticleService {
                 }
             }
         }
-        int recSize = 5;  
+        int recSize = 5;  // if the reccomended topic list is empty or too short, pick the top topics across all users
         if (topicsToRec.isEmpty() || topicsToRec.size() < recSize){
             int numberOfTopics = recSize - topicsToRec.size();
             List<String> popTopics = getMostPopularTopics(numberOfTopics);
-            topicsToRec.addAll(popTopics); 
+            
+            List<String> popTopicsSubset = popTopics.stream().filter(topic -> !usernameTopicCount.keySet().contains(topic)).toList();
+            topicsToRec.addAll(popTopicsSubset); 
         }
 
         Map<String, String> sectionsMap = getSections();
