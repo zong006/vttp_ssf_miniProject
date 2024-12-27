@@ -52,7 +52,7 @@ public class UserController {
             Deque<String> queries = userService.getQueryEntries(user.getUsername());
             user.setQueryHist(queries);
             // need to set user query deque
-            System.out.println(user.toString()); // delete this later
+            // System.out.println(user.toString()); // delete this later
             httpSession.setAttribute("user", user);
             
             return "redirect:/latest";
@@ -69,9 +69,6 @@ public class UserController {
         Map<String, Map<String, String>> topics = articleService.splitTopics();
         Map<String, String> popTopics = topics.get("popular");
         Map<String, String> others = topics.get("others");
-
-        // model.addAttribute("popTopics", popTopics);
-        // model.addAttribute("others", others);
 
         httpSession.setAttribute("popTopics", popTopics);
         httpSession.setAttribute("others", others);
@@ -90,16 +87,16 @@ public class UserController {
 
         httpSession.setAttribute("user", user);
         User u = (User) httpSession.getAttribute("user"); //
-        System.out.println(u.getUsername()); //
+        // System.out.println(u.getUsername()); //
         // System.out.println(httpSession.getAttribute(user.getUsername()));
         
         if (userService.userExists(user.getUsername())){
-            System.out.println("user exsits"); // delete this later
+            // System.out.println("user exsits"); // delete this later
             model.addAttribute("errorMessageUser", "Username already exists. Please choose another username.");
             return "errorPage";
         }
         // a new user. pass the topics of interest as a list to the service to be processed
-        System.out.println("a new user"); // delete this later
+        // System.out.println("a new user"); // delete this later
         userService.updateUserPref(user.getUsername(), user.getTopicsOfInterest());
 
         return "redirect:/latest";

@@ -147,7 +147,7 @@ public class ArticleService {
 
     public Map<String, String> getRecTopic(String username) throws JsonMappingException, JsonProcessingException{
         List<String> topMatches = getTopMatchesForUser(username);
-        System.out.println(topMatches); // remove this later
+        // System.out.println(topMatches); // remove this later
         Map<String, Integer> usernameTopicCount = userService.getTopicCount(username);
 
         List<String> topicsToRec = new ArrayList<>(); // this is a list of topics in topMatch that are not in username
@@ -206,7 +206,7 @@ public class ArticleService {
                 }
             }
         }
-        System.out.println("rec map: " + recSectionMap.toString()); // remove this later
+        // System.out.println("rec map: " + recSectionMap.toString()); // remove this later
         return recSectionMap;
     }
 
@@ -226,7 +226,7 @@ public class ArticleService {
                 
             }
         }
-        System.out.println(userScores); // remove this later
+        // System.out.println(userScores); // remove this later
         return userScores.entrySet().stream()
                 .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  
                 .limit(2)  

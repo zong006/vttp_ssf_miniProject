@@ -51,8 +51,8 @@ public class ArticleController {
         model.addAttribute("articles", latestArticles);
         model.addAttribute("sectionMap", sectionMap);
 
-        System.out.println(httpSession.getAttribute("latestPage"));
-        System.out.println(page);
+        // System.out.println(httpSession.getAttribute("latestPage"));
+        // System.out.println(page);
 
         return "latestNews";
     }
@@ -72,8 +72,8 @@ public class ArticleController {
             
         }
         page = (int) httpSession.getAttribute("latestPage");
-        System.out.println(page);
-        System.out.println(httpSession.getAttribute("latestPage"));
+        // System.out.println(page);
+        // System.out.println(httpSession.getAttribute("latestPage"));
 
         // gets articles by section according to articleService.getTopicNumbers, and add them to list of articles to display
         for(String topic : topicNumbers.keySet()){
@@ -205,9 +205,9 @@ public class ArticleController {
         model.addAttribute("articles", articles);
         httpSession.setAttribute("latestPage", page);
 
-        System.out.println(httpSession.getAttribute("latestPage"));
-        System.out.println(page);
-        System.out.println(httpSession.getAttribute("atLatest"));
+        // System.out.println(httpSession.getAttribute("latestPage"));
+        // System.out.println(page);
+        // System.out.println(httpSession.getAttribute("atLatest"));
 
         boolean atLatest = (boolean) httpSession.getAttribute("atLatest");
         return atLatest? "latestNews" : "redirect:/feed";
