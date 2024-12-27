@@ -22,7 +22,18 @@
             <h2>Select at least one topic of interest:</h2>
             <span th:if="*{#fields.hasErrors('topicsOfInterest')}" th:errors="*{topicsOfInterest}" class="error-box text-danger"></span>
             <div class="row">
-                <div class="col-3" th:each="section : ${session.sectionMap}">
+                <h4>Popular Topics</h4>
+                <div class="col-3" th:each="section : ${session.popTopics}">
+                    <div>
+                        <input type="checkbox" th:field="*{topicsOfInterest}" th:value="${section.value}" th:id="${section.value}">
+                        <label th:for="${section.value}" th:text="${section.key}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <h4>Explore other topics</h4>
+                <div class="col-3" th:each="section : ${session.others}">
                     <div>
                         <input type="checkbox" th:field="*{topicsOfInterest}" th:value="${section.value}" th:id="${section.value}">
                         <label th:for="${section.value}" th:text="${section.key}"></label>

@@ -162,7 +162,7 @@ public class ArticleService {
                 }
             }
         }
-        int recSize = 5;  // if the reccomended topic list is empty or too short, pick the top topics across all users
+        int recSize = 8;  // if the reccomended topic list is empty or too short, pick the top topics across all users
         if (topicsToRec.isEmpty() || topicsToRec.size() < recSize){
             int numberOfTopics = recSize - topicsToRec.size();
             List<String> popTopics = getMostPopularTopics(numberOfTopics);
@@ -177,9 +177,34 @@ public class ArticleService {
             .filter(entry -> topicsToRec.contains(entry.getValue())) // Keep entries with values in the list
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if (recSectionMap.size() < 5){
+        if (recSectionMap.size() < recSize){
             Map<String, Map<String, String>> topicSplit = splitTopics();
-            recSectionMap.putAll(topicSplit.get("popular"));
+            Map<String, String> popTopics = topicSplit.get("popular");
+
+            for (String topic : popTopics.keySet()){
+                if (!usernameTopicCount.containsKey(popTopics.get(topic))){
+                    recSectionMap.put(topic, popTopics.get(topic));
+                }
+            }
+        }
+
+        if (recSectionMap.size() < recSize){
+            Random r = new Random();
+            int numberOfTopics = recSize - recSectionMap.size();
+
+            Map<String, Map<String, String>> topicSplit = splitTopics();
+            Map<String, String> others = topicSplit.get("others");
+
+            int counter = 0;
+            for (Map.Entry<String, String> entry : others.entrySet()){
+                if (r.nextDouble() < 0.07){
+                    recSectionMap.put(entry.getKey(), entry.getValue());
+                    counter += 1;
+                }
+                if (counter == numberOfTopics){
+                    break;
+                }
+            }
         }
         System.out.println("rec map: " + recSectionMap.toString()); // remove this later
         return recSectionMap;
@@ -296,6 +321,9 @@ public class ArticleService {
         popTopics.put("Environment", "environment");
         popTopics.put("Life and style","lifeandstyle");
         popTopics.put("Film", "film");
+        popTopics.put("Business", "business");
+        popTopics.put("Food", "food");
+        popTopics.put("Sport", "sport");
 
         for (Map.Entry<String, String> entry : popTopics.entrySet()){
             allTopics.remove(entry.getKey());

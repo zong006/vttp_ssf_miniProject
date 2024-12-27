@@ -10,14 +10,15 @@
 <body>
     <header class="sticky-header">
         <div class="header-content container">
-
-            <form th:action="@{/latest}" method="get" th:if="${!session.atLatest}">
-                <button type="submit" class="btn btn-primary">Return to Latest News</button>
-            </form>
-            
-            <form th:action="@{/feed}" method="get" th:if="${session.atLatest}">
-                <button type="submit" class="btn btn-primary">Go to News Feed</button>
-            </form>
+            <div class="d-flex flex-column align-items-center gap-2">
+                <form th:action="@{/latest}" method="get" th:if="${!session.atLatest}">
+                    <button type="submit" class="btn btn-primary">Go to Latest News</button>
+                </form>
+                
+                <form th:action="@{/feed}" method="get" >
+                    <button type="submit" class="btn btn-primary">Go to News Feed</button>
+                </form>
+            </div>
             <h1 class="text-white text-center my-3" th:text="${session.headerTitle}"></h1>
             <form th:action="@{/search}" method="GET" class="search-bar d-flex justify-content-center">
                 <span class="search-text">Search for articles</span>

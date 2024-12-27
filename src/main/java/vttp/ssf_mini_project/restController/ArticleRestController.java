@@ -63,10 +63,5 @@ public class ArticleRestController {
         }
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test(){
-        Map<String, Map<String, String>>res = articleService.splitTopics();
 
-        return ResponseEntity.ok().body(res.toString());
-    }
 }

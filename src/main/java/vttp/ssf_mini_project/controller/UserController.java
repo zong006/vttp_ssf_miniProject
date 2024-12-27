@@ -65,9 +65,16 @@ public class UserController {
     public String newUserPage(HttpSession httpSession, Model model){
         
         model.addAttribute("user", new User());
-        Map<String, String> sectionMap = articleService.getSections();
+        // Map<String, String> sectionMap = articleService.getSections();
+        Map<String, Map<String, String>> topics = articleService.splitTopics();
+        Map<String, String> popTopics = topics.get("popular");
+        Map<String, String> others = topics.get("others");
 
-        httpSession.setAttribute("sectionMap", sectionMap);
+        // model.addAttribute("popTopics", popTopics);
+        // model.addAttribute("others", others);
+
+        httpSession.setAttribute("popTopics", popTopics);
+        httpSession.setAttribute("others", others);
         
         return "newUserPage";
     }
