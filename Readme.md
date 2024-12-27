@@ -1,62 +1,29 @@
-#### landing page
-- enter username : use as key to the hashmap. (check if username exists in the hashmap. choose another one if alr does)
-- select at least 1 topic of interest (from list gotten from /sections? endpoint, and add in form to fill in). this submits parameters to be used for content based reccomendations
-- link to continue browsing news
+#### Vttp SSF Mini-Project
 
-#### view 1 (default, latest news)
-- have a search bar to enter query term (use this for /q=...) to query for relevant news articles. this also submits the query terms to be saved (potentially for collab filtering?)
-- display latest news 
-- button to go to reccomended news 
-- button to save news url (this submits the tag or something of the news to be used for either content or collab filtering. or use as a like button?)
-- button to go to list of saved articles
+##### Overview
+To build a reccomender system that: 
+- tracks the user's read and query history and to use this information to push articles to the user via a news feed.
+- performs analysis across other users to suggest topics to the user based on the interests of other similar users.
 
-#### view 2 (reccomended news, news feed)
-- have a search bar to enter query term (use this for /q=...) to query for relevant news articles
-- display reccomended news 
-- button to save news url (this submits the tag or something of the news to be used for either content or collab filtering)
-- button to go to list of saved articles
+##### 1. Tracking the user's read and query history
+- The following data is stored for each user:
+    - a hashmap of topics and a corresponding count.
+    - a deque of most recent search queries.
+- About the hashmap:
+    - Every article contains metadata such as its title, topic, url etc. When a user clicks on an article to read, the topic name is updated into the hashmap, and its count is increased by 1. As the user clicks on more articles to read over time, the hashmap grows and there can be a distribution of topics of interest for the user.
+- About the deque:
+    - The site supports a search function to query for articles. The query goes into the deque such that only the latest few queries are stored.
 
-#### view 3 (list of saved articles)
-- filter based on year?
-- to display saved articles, extract the id of the article. url is https://www.theguardian.com/{id}
-- path variable to filter out according to section
+##### 2. Pushing articles to the user in the news feed
+- Given the distribution of topics according to the hashmap of topics and its counts, a simple sampling can be done to select the latest articles of a given topic according to its probability ie. if the user really likes reading articles belonging to the topic 'Food', counts of 'Food' will be relatively higher in the hashmap compared to other topics. The expected number of articles about food will then be way higher than articles of other topics in the news feed.
+- A portion of the news feed is also reserved for pushing articles to the user according to the entries in the recent query history (the query deque).
+- All these articles will then be collated, sorted by published datetime, and pushed to the news feed.
 
-#### view 3 error page 
-- link to go back to saved articles
-- link to go back to latest news
-- link to go back to reccomended newsfeed
+##### 3. Suggesting alternative topics to the user
+- With the data of all users' hashmaps of topics and its corresponding counts, we can score other users against the curent user using a cosine similarity score.
+- The scores are ranked, and topics from the top ranked users not present in the current user's topic count is suggested to the user. A minimum number of topics to reccomend is set such that any difference between this minimum number and the number of reccomended topics based on calculations is made up for by a preset list of "popular topics".
 
-
-
-
-#### others
-- can save articel id. the url is https://www.theguardian.com/{article id}
-- features: 
-    - type (article, liveblog etc)
-    - sectionName (world, lifestyle etc)
-    - pillarName (news, sport, art etc)
-
-- to retrieve article according to id, use https://content.guardianapis.com/ + {id} + ?&api-key=d526b545-40c8-402c-ae7b-16691d574c61 
-    - see https://open-platform.theguardian.com/documentation/item
-- to get articles according to section, use https://content.guardianapis.com/ + {section} + ?&api-key=
-- the OR operator in query is | 
-- both search query and latest news share the same view and hence same nextPage endpoint (since both get articles from single url). newsfeed on the other hand, gets articles from multiple urls (diff sections etc) hence it will have its own endpoint
-
-
-#### kpi
-- validation: used in the login page (done)
-- controller: display latest articles etc (done)
-- rest controller: for displaying rec articles?
-- path variable: for filtering saved articles?
-- 3 views or more: already done
-- support omre than 1 user: via httpsessions (in progress)
-    - how to ensure that no duplicate usernames in database? to have a create new user and also login page seperately?
-
-#### to do
-- add explore other sections to news feed page. this should be topics not inside the entire list (?)
-- split the topics in create user page to popular and others (done) 
-- add a route from section search page to newsfeed as well (done)
-- centralize the next page / previous page button (done)
-- think of a landing page title (News Read. // You read the news. We read you.) (done) 
-- maybe add a password
-- add view to edit user preferences
+##### 4. View flow
+- New users are to register using a username and to select at least one topic of interest. This helps circumvent the cold start problem.
+- Upon login or creating a new account, users are directed to a page displaying the latest news regardless of topic. From here, they can navigate to either the news feed, read an article, select a topic, or query for articles.
+- The logout button brings them back to the landing page.
