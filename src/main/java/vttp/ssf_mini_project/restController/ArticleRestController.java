@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import vttp.ssf_mini_project.model.Article;
 import vttp.ssf_mini_project.service.ArticleService;
+import vttp.ssf_mini_project.service.UserService;
 import vttp.ssf_mini_project.util.Util;
 
 @RestController
@@ -26,7 +30,10 @@ public class ArticleRestController {
     @Autowired
     ArticleService articleService;
 
-    @Value("${api_key}") 
+    @Autowired
+    UserService userService; //delete this later
+
+    @Value("") 
     private String api_key;
 
     @GetMapping("/{query}")
@@ -60,6 +67,4 @@ public class ArticleRestController {
             return ResponseEntity.badRequest().body(e.getResponseBodyAsString());
         }
     }
-
-
 }

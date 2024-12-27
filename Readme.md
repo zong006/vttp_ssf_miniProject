@@ -59,3 +59,4 @@
 - centralize the next page / previous page button (done)
 - think of a landing page title (News Read. // You read the news. We read you.) (done) 
 - maybe add a password
+- add view to edit user preferences
