@@ -53,9 +53,9 @@
     - how to ensure that no duplicate usernames in database? to have a create new user and also login page seperately?
 
 #### to do
-- add explore other sections to news feed page. this should be topics not inside the entire list
-- split the topics in create user page to popular and others (done)
-- add a route from section search page to newsfeed as well
-- centralize the next page / previous page button
-- think of a landing page title (News Read. // You read the news. We read you.)
+- add explore other sections to news feed page. this should be topics not inside the entire list (?)
+- split the topics in create user page to popular and others (done) 
+- add a route from section search page to newsfeed as well (done)
+- centralize the next page / previous page button (done)
+- think of a landing page title (News Read. // You read the news. We read you.) (done) 
 - maybe add a password

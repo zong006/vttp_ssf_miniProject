@@ -52,7 +52,7 @@
 
                 <!-- Pagination -->
                 <nav th:if="${articles != null && !articles.isEmpty()}" class="mt-4">
-                    <ul class="pagination">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item" th:if="${session.latestPage >= 2}">
                             <a class="page-link" th:href="@{/nextPage(page=${session.latestPage-1})}">Previous</a>
                         </li>
