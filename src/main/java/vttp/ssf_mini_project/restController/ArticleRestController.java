@@ -17,7 +17,6 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import vttp.ssf_mini_project.model.Article;
 import vttp.ssf_mini_project.service.ArticleService;
-import vttp.ssf_mini_project.service.UserService;
 import vttp.ssf_mini_project.util.Util;
 
 @RestController
@@ -27,10 +26,7 @@ public class ArticleRestController {
     @Autowired
     ArticleService articleService;
 
-    @Autowired
-    UserService userService; //delete this later
-
-    @Value("") 
+    @Value("${api_key}") 
     private String api_key;
 
     @GetMapping("/{query}")
