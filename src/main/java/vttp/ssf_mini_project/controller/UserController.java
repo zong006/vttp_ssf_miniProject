@@ -86,7 +86,7 @@ public class UserController {
         }
 
         httpSession.setAttribute("user", user);
-        User u = (User) httpSession.getAttribute("user"); //
+        // User u = (User) httpSession.getAttribute("user"); //
         // System.out.println(u.getUsername()); //
         // System.out.println(httpSession.getAttribute(user.getUsername()));
         
