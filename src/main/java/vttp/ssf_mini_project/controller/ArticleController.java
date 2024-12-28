@@ -47,12 +47,14 @@ public class ArticleController {
         httpSession.setAttribute("latestPage", page);
         httpSession.setAttribute("searchIsNull", false);
         httpSession.setAttribute("atLatest", true);
+        httpSession.setAttribute("atSection", false);
 
         model.addAttribute("articles", latestArticles);
         model.addAttribute("sectionMap", sectionMap);
 
-        // System.out.println(httpSession.getAttribute("latestPage"));
-        // System.out.println(page);
+        System.out.println("latest: " + httpSession.getAttribute("latestPage"));
+        System.out.println(latestNewsUrl);
+        System.out.println(page);
 
         return "latestNews";
     }
@@ -107,6 +109,8 @@ public class ArticleController {
         } 
         model.addAttribute("topicsToRec", topicsToRec);
         httpSession.setAttribute("headerTitle", "News Feed");
+
+        System.out.println(queryUrl);
         
         return "newsFeed";
     }
@@ -143,7 +147,10 @@ public class ArticleController {
         httpSession.setAttribute("headerTitle", "Showing articles about: " + sectionKey);
         httpSession.setAttribute("url", sectionUrl);
         httpSession.setAttribute("latestPage", page);
-        httpSession.setAttribute("atLatest", false);
+        // httpSession.setAttribute("atLatest", false); // set atLatest = true
+        httpSession.setAttribute("atSection", true);
+        System.out.println("section page:" + httpSession.getAttribute("latestPage"));
+        System.out.println(sectionUrl);
         return "latestNews";
     }
 
@@ -196,20 +203,26 @@ public class ArticleController {
     @GetMapping("/nextPage") // shared by both latest news and search page
     public String getNextPage(@RequestParam(defaultValue = "1") int page, Model model, HttpSession httpSession) throws ParseException, IOException{
 
-        
-        String url = (String) httpSession.getAttribute("url") + Integer.toString(page);
-        List<Article> articles = articleService.getArticleList(url + Integer.toString(page));
-        Map<String, String> sectionMap = articleService.getSections();
-        model.addAttribute("sectionMap", sectionMap);
-
-        model.addAttribute("articles", articles);
-        httpSession.setAttribute("latestPage", page);
-
-        // System.out.println(httpSession.getAttribute("latestPage"));
-        // System.out.println(page);
-        // System.out.println(httpSession.getAttribute("atLatest"));
-
         boolean atLatest = (boolean) httpSession.getAttribute("atLatest");
-        return atLatest? "latestNews" : "redirect:/feed";
+        
+        String sessionUrl = (String) httpSession.getAttribute("url");
+        int pageIndex = sessionUrl.indexOf("&page=");
+        String url = sessionUrl.substring(0, pageIndex) + Util.newsPageEntry + Integer.toString(page);
+        httpSession.setAttribute("latestPage", page);
+        if (atLatest){
+            List<Article> articles = articleService.getArticleList(url + Integer.toString(page));
+            Map<String, String> sectionMap = articleService.getSections();
+            model.addAttribute("sectionMap", sectionMap);
+
+            model.addAttribute("articles", articles);
+            
+
+            System.out.println("next page: " + httpSession.getAttribute("latestPage"));
+            System.out.println(page);
+            // System.out.println(httpSession.getAttribute("atLatest"));
+            System.out.println(url);
+            return "latestNews";
+        }
+        return "redirect:/feed";
     }
 }
