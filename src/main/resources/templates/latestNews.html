@@ -76,30 +76,6 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- <nav th:if="${articles != null && !articles.isEmpty()}" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        Previous Button
-                        <li class="page-item" th:classappend="${session.latestPage == 1 ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage - 1})}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                
-                        Page Numbers
-                        <li class="page-item" th:each="page : ${#numbers.sequence(session.latestPage > 5 ? session.latestPage - 5 : 1, 
-                                                                                   totalPages > session.latestPage + 5 ? session.latestPage + 5 : totalPages)}"
-                            th:classappend="${page == session.latestPage ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/nextPage(page=${page})}" th:text="${page}"></a>
-                        </li>
-                
-                        Next Button
-                        <li class="page-item" th:classappend="${session.latestPage == totalPages ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage + 1})}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li> -->
-                    </ul>
-                <!-- </nav> -->
                 
                 
                 <div th:if="${articles.isEmpty()}" class="text-center">

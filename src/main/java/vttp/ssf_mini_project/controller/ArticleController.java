@@ -55,9 +55,7 @@ public class ArticleController {
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
 
-        System.out.println("latest: " + httpSession.getAttribute("latestPage"));
-        System.out.println(latestNewsUrl);
-        System.out.println(page);
+        // System.out.println(latestNewsUrl);
 
         return "latestNews";
     }
@@ -115,7 +113,7 @@ public class ArticleController {
         model.addAttribute("topicsToRec", topicsToRec);
         httpSession.setAttribute("headerTitle", "News Feed");
 
-        System.out.println(queryUrl);
+        // System.out.println(queryUrl);
         
         return "newsFeed";
     }
@@ -157,8 +155,8 @@ public class ArticleController {
         httpSession.setAttribute("latestPage", page);
         // set atLatest = true even when browsing a particular section
         httpSession.setAttribute("atSection", true);
-        System.out.println("section page:" + httpSession.getAttribute("latestPage"));
-        System.out.println(sectionUrl);
+    
+        // System.out.println(sectionUrl);
         return "latestNews";
     }
 
@@ -205,7 +203,7 @@ public class ArticleController {
         }
         
 
-        System.out.println(queryUrl); //
+        // System.out.println(queryUrl); 
         return "latestNews";
     }
 
@@ -227,9 +225,7 @@ public class ArticleController {
             model.addAttribute("articles", articles);
             model.addAttribute("totalPages", totalPages);
 
-            System.out.println("next page: " + httpSession.getAttribute("latestPage")); //
-            System.out.println(page); //
-            System.out.println(url); //
+            // System.out.println(url); 
             return "latestNews";
         }
         return "redirect:/feed";
