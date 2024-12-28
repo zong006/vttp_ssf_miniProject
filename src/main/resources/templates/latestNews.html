@@ -19,7 +19,11 @@
                     <button type="submit" class="btn btn-primary">Go to News Feed</button>
                 </form>
             </div>
-            <h1 class="text-white text-center my-3" th:text="${session.headerTitle}"></h1>
+            <div>
+                <h1 class="text-white text-center my-3" th:text="${session.headerTitle}"></h1>
+                <h2 class="text-white text-center my-1" th:if="${session.atSection}" th:text=" ${sectionKey}"></h2>
+            </div>
+            
             <form th:action="@{/search}" method="GET" class="search-bar d-flex justify-content-center">
                 <span class="search-text">Search for articles</span>
                 <input type="text" name="query" class="form-control w-50 me-2" placeholder="Search...">

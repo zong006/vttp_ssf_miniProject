@@ -54,7 +54,12 @@
                 <nav th:if="${articles != null && !articles.isEmpty()}" class="mt-4">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:if="${session.latestPage >= 2}">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage-1})}">Previous</a>
+                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage-1})}">Prev</a>
+                        </li>
+                        <li class="page-item" th:each="page : ${#numbers.sequence(session.latestPage > 5 ? session.latestPage - 5 : 1, 
+                            totalPages > session.latestPage + 5 ? session.latestPage + 5 : totalPages)}"
+                            th:classappend="${page == session.latestPage ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/nextPage(page=${page})}" th:text="${page}"></a>
                         </li>
                         <li class="page-item">
                             <a class="page-link" th:href="@{/nextPage(page=${session.latestPage+1})}">Next</a>

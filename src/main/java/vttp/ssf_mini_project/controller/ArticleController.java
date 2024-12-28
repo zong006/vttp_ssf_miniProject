@@ -150,8 +150,9 @@ public class ArticleController {
         model.addAttribute("articles", articles);
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("sectionKey", sectionKey);
 
-        httpSession.setAttribute("headerTitle", "Showing articles about: " + sectionKey);
+        httpSession.setAttribute("headerTitle", "Showing articles about: ");
         httpSession.setAttribute("url", sectionUrl);
         httpSession.setAttribute("latestPage", page);
         // set atLatest = true even when browsing a particular section
