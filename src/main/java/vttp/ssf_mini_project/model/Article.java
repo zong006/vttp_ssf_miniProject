@@ -8,7 +8,14 @@ public class Article {
     private Long date;
     private String imageUrl;
     private String sectionId;
+    private int pages;
     
+    public int getPages() {
+        return pages;
+    }
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
     public String getSectionId() {
         return sectionId;
     }

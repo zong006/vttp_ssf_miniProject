@@ -40,6 +40,8 @@ public class ArticleController {
         String latestNewsUrl = Util.newsUrl + Util.newsSearchQuery + Util.newsApiEntry + api_key + Util.newsPageSizeEntry + Util.newsPageSize + Util.newsPageEntry;
         
         List<Article> latestArticles = articleService.getArticleList(latestNewsUrl + Integer.toString(page));
+        int totalPages = latestArticles.get(0).getPages();
+
         Map<String, String> sectionMap = articleService.getSections();
 
         httpSession.setAttribute("url", latestNewsUrl);
@@ -51,6 +53,7 @@ public class ArticleController {
 
         model.addAttribute("articles", latestArticles);
         model.addAttribute("sectionMap", sectionMap);
+        model.addAttribute("totalPages", totalPages);
 
         System.out.println("latest: " + httpSession.getAttribute("latestPage"));
         System.out.println(latestNewsUrl);
@@ -96,9 +99,11 @@ public class ArticleController {
         recArticleList.addAll(queryArticles);
 
         recArticleList.sort(Comparator.comparingLong(Article::getDate).reversed());
+        int totalPages = recArticleList.get(0).getPages();
 
         model.addAttribute("articles", recArticleList);
         model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
         // show reccomended topics to user based on other similar users
         Map<String, String> topicsToRec = articleService.getRecTopic(user.getUsername());
@@ -140,14 +145,16 @@ public class ArticleController {
         String sectionUrl = Util.newsUrl + Util.newsSearchQuery + Util.newsSectionEntry +  sectionId + Util.newsApiEntry + api_key + Util.newsPageSizeEntry + Util.newsPageSize + Util.newsPageEntry + Integer.toString(page);
         
         List<Article> articles = articleService.getArticleList(sectionUrl); 
+        int totalPages = articles.get(0).getPages();
         Map<String, String> sectionMap = articleService.getSections();
         model.addAttribute("articles", articles);
         model.addAttribute("sectionMap", sectionMap);
+        model.addAttribute("totalPages", totalPages);
 
         httpSession.setAttribute("headerTitle", "Showing articles about: " + sectionKey);
         httpSession.setAttribute("url", sectionUrl);
         httpSession.setAttribute("latestPage", page);
-        // httpSession.setAttribute("atLatest", false); // set atLatest = true
+        // set atLatest = true even when browsing a particular section
         httpSession.setAttribute("atSection", true);
         System.out.println("section page:" + httpSession.getAttribute("latestPage"));
         System.out.println(sectionUrl);
@@ -171,7 +178,7 @@ public class ArticleController {
                                 Util.newsPageEntry;
 
         List<Article> queryArticles = articleService.getArticleList(queryUrl + Integer.toString(searchPage));
-        
+        int totalPages = queryArticles.get(0).getPages();
         queryArticles.sort(Comparator.comparingLong(Article::getDate).reversed());
 
         httpSession.setAttribute("url", queryUrl);
@@ -181,7 +188,7 @@ public class ArticleController {
         Map<String, String> sectionMap = articleService.getSections();
         model.addAttribute("articles", queryArticles);
         model.addAttribute("sectionMap", sectionMap);
-
+        model.addAttribute("totalPages", totalPages);
         
         // save query to track user interests. want to create a deque of fixed length to only track the latest X number of queries
         if (queryArticles.size()!=0){
@@ -197,6 +204,7 @@ public class ArticleController {
         }
         
 
+        System.out.println(queryUrl); //
         return "latestNews";
     }
 
@@ -211,16 +219,16 @@ public class ArticleController {
         httpSession.setAttribute("latestPage", page);
         if (atLatest){
             List<Article> articles = articleService.getArticleList(url + Integer.toString(page));
+            int totalPages = articles.get(0).getPages();
             Map<String, String> sectionMap = articleService.getSections();
             model.addAttribute("sectionMap", sectionMap);
 
             model.addAttribute("articles", articles);
-            
+            model.addAttribute("totalPages", totalPages);
 
-            System.out.println("next page: " + httpSession.getAttribute("latestPage"));
-            System.out.println(page);
-            // System.out.println(httpSession.getAttribute("atLatest"));
-            System.out.println(url);
+            System.out.println("next page: " + httpSession.getAttribute("latestPage")); //
+            System.out.println(page); //
+            System.out.println(url); //
             return "latestNews";
         }
         return "redirect:/feed";

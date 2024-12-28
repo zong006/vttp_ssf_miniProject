@@ -57,9 +57,11 @@ public class ArticleService {
         JsonObject jsonData = jsonReader.readObject();
         JsonObject response = jsonData.getJsonObject("response");
         JsonArray results = response.getJsonArray("results");
+        int pages = response.getInt("pages");
 
         for (int i=0 ; i<results.size() ; i++){
             Article article = new Article();
+            article.setPages(pages);
 
             JsonObject x = results.getJsonObject(i);
             article.setId(x.getString("id"));
