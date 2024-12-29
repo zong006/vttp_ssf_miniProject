@@ -161,7 +161,7 @@ public class ArticleController {
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
         
-        httpSession.setAttribute("headerTitle", "Showing articles about: ");
+        httpSession.setAttribute("headerTitle", "Topic: ");
         httpSession.setAttribute("sectionKey", sectionKey);
         httpSession.setAttribute("url", sectionUrl);
         httpSession.setAttribute("latestPage", page);
@@ -191,7 +191,7 @@ public class ArticleController {
         queryArticles.sort(Comparator.comparingLong(Article::getDate).reversed());
 
         httpSession.setAttribute("url", queryUrl);
-        httpSession.setAttribute("headerTitle", "Showing articles about: ");
+        httpSession.setAttribute("headerTitle", "Search: ");
         httpSession.setAttribute("latestPage", searchPage);
         httpSession.setAttribute("atLatest", true);
         httpSession.setAttribute("atSection", false);
@@ -295,14 +295,17 @@ public class ArticleController {
         boolean atSection = (boolean) httpSession.getAttribute("atSection");
         boolean atQuery = (boolean) httpSession.getAttribute("atQuery");
         String headerTitle;
-        if (atSection || atQuery){
-            headerTitle = "Showing articles about: ";
+        if (atSection){
+            headerTitle = "Topic: ";
+        }
+        else if(atQuery){
+            headerTitle = "Search: ";
         }
         else {
             headerTitle = "Latest News";
         }
         httpSession.setAttribute("headerTitle", headerTitle);
-        model.addAttribute("filter", "From " + fromDate + " To " + toDate);
+        httpSession.setAttribute("filter", "From " + fromDate + " To " + toDate);
         
         model.addAttribute("articles", filtredArticles);
         model.addAttribute("sectionMap", sectionMap);
