@@ -329,11 +329,14 @@ public class ArticleController {
     public String removeDateFilter(HttpSession httpSession, Model model) throws ParseException, IOException{
 
         String sessionUrl = (String) httpSession.getAttribute("url");
-        System.out.println(sessionUrl);
+        
         int pageIndex = sessionUrl.indexOf("&from-date=");
-        String url = sessionUrl.substring(0, pageIndex);
-        System.out.println(url);
-        List<Article> articles = articleService.getArticleList(url);
+        if (pageIndex!=-1){
+            sessionUrl = sessionUrl.substring(0, pageIndex);
+        }
+        
+        
+        List<Article> articles = articleService.getArticleList(sessionUrl);
         Map<String, String> sectionMap = articleService.getSections();
         int totalPages = articles.get(0).getPages();
 
@@ -355,7 +358,7 @@ public class ArticleController {
         model.addAttribute("articles", articles);
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
-        httpSession.setAttribute("url", url);
+        httpSession.setAttribute("url", sessionUrl);
 
 
         return "latestNews";
