@@ -297,6 +297,7 @@ public class ArticleController {
         model.addAttribute("articles", filtredArticles);
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
+        httpSession.setAttribute("url", filteredUrl);
 
 
         // System.out.println(filteredUrl);
