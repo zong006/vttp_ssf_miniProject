@@ -165,6 +165,7 @@ public class ArticleController {
         httpSession.setAttribute("sectionKey", sectionKey);
         httpSession.setAttribute("url", sectionUrl);
         httpSession.setAttribute("latestPage", page);
+        httpSession.removeAttribute("filter");
         
         // System.out.println(sectionUrl);
         return "latestNews";
@@ -197,6 +198,7 @@ public class ArticleController {
         httpSession.setAttribute("atSection", false);
         httpSession.setAttribute("atQuery", true);
         httpSession.setAttribute("query", query);
+        httpSession.removeAttribute("filter");
 
         Map<String, String> sectionMap = articleService.getSections();
         model.addAttribute("articles", queryArticles);

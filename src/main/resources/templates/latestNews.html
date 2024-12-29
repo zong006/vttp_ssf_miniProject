@@ -22,6 +22,7 @@
             <div>
                 <h1 class="text-white text-center my-3" th:text="${session.headerTitle} + ${sessioin.query}" th:if="${session.atQuery}"></h1>
                 <h2 class="text-white text-center my-1" th:text=" ${session.headerTitle} + ${session.sectionKey}" th:if="${session.atSection}"></h2>
+                <h2 class="text-white text-center my-1" th:text=" ${session.headerTitle}" th:if="${!session.atSection && !session.atQuery}"></h2>
                 <h2 class="text-white text-center my-1" th:text=" ${session.filter}" ></h2>
             </div>
             
