@@ -191,6 +191,7 @@ public class ArticleController {
                                 Util.newsPageEntry;
 
         List<Article> queryArticles = articleService.getArticleList(queryUrl + Integer.toString(searchPage));
+        
         int totalPages = queryArticles.get(0).getPages();
         queryArticles.sort(Comparator.comparingLong(Article::getDate).reversed());
 
