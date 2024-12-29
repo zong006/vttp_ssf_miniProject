@@ -51,6 +51,7 @@ public class ArticleController {
         httpSession.setAttribute("atLatest", true);
         httpSession.setAttribute("atSection", false);
         httpSession.setAttribute("atQuery", false);
+        httpSession.removeAttribute("filter");
 
         model.addAttribute("articles", latestArticles);
         model.addAttribute("sectionMap", sectionMap);
