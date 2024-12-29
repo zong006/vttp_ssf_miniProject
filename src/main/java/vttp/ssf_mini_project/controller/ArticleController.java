@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import vttp.ssf_mini_project.model.Article;
@@ -316,8 +318,44 @@ public class ArticleController {
         httpSession.setAttribute("url", filteredUrl);
 
 
-        // System.out.println(filteredUrl);
+        System.out.println(filteredUrl);
         
+
+        return "latestNews";
+    }
+
+    @GetMapping("/back")
+    public String removeDateFilter(HttpSession httpSession, Model model) throws ParseException, IOException{
+
+        String sessionUrl = (String) httpSession.getAttribute("url");
+        System.out.println(sessionUrl);
+        int pageIndex = sessionUrl.indexOf("&from-date=");
+        String url = sessionUrl.substring(0, pageIndex);
+        System.out.println(url);
+        List<Article> articles = articleService.getArticleList(url);
+        Map<String, String> sectionMap = articleService.getSections();
+        int totalPages = articles.get(0).getPages();
+
+        boolean atSection = (boolean) httpSession.getAttribute("atSection");
+        boolean atQuery = (boolean) httpSession.getAttribute("atQuery");
+        String headerTitle;
+        if (atSection){
+            headerTitle = "Topic: ";
+        }
+        else if(atQuery){
+            headerTitle = "Search: ";
+        }
+        else {
+            headerTitle = "Latest News";
+        }
+        httpSession.setAttribute("headerTitle", headerTitle);
+        httpSession.removeAttribute("filter");
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("sectionMap", sectionMap);
+        model.addAttribute("totalPages", totalPages);
+        httpSession.setAttribute("url", url);
+
 
         return "latestNews";
     }

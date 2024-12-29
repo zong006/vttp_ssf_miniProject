@@ -90,9 +90,9 @@
             </div>
            <!-- right side -->
             <div class="col-md-4">
-                <section class="sticky-date-filter bg-dark mb-4">
+                <!-- <section class="sticky-date-filter bg-dark mb-4">
                     <div class="container">
-                        <form th:action="@{/filterByDate}" method="GET" class="date-filter-form text-center py-1"  th:object="${dateFilter}">
+                        <form th:action="@{/filterByDate}" method="GET" class="date-filter-form text-center py-1">
                             <div class="row justify-content-center">
                                 <h5>Filter articles by date</h5>
                                 <div class="col-4">
@@ -104,13 +104,45 @@
                                     <label for="toDate" class="text-white small">To:</label>
                                     <input type="month" id="toDate" name="toDate" class="form-control form-control-sm" required>
                                 </div>
-                                <div class="row mt-3 col-auto">
-                                    <button type="submit" class="btn btn-outline-light btn-sm mt-2">Filter</button>
+                                <div class="d-flex justify-content-center col-12 mt-3">
+                            
+                                    <button type="submit" class="btn btn-outline-light btn-sm">Filter</button>
+        
+                                    <a th:href="@{/latest}" class="btn btn-outline-danger btn-sm ms-2">Re Filters</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section> -->
+                <section class="sticky-date-filter bg-dark mb-4">
+                    <div class="container">
+                        <form th:action="@{/filterByDate}" method="GET" class="date-filter-form py-1">
+                            <h5 class="text-white  text-center">Filter articles by date</h5>
+                            <div class="d-flex justify-content-start align-items-center flex-nowrap">
+                                
+                                <div class="me-3">
+                                    <label for="fromDate" class="text-white small">From:</label>
+                                    <input type="month" id="fromDate" name="fromDate" class="form-control form-control-sm" required>
+                                    <input type="hidden" id="url" name="url" th:value="${session.url}">
+                                </div>
+                                <div class="me-3">
+                                    <label for="toDate" class="text-white small">To:</label>
+                                    <input type="month" id="toDate" name="toDate" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="me-3">
+                                    <button type="submit" class="btn btn-outline-light btn-xs">Filter</button>
+                                </div>
+                                <div class="me-3">
+                                    <a th:href="@{/back}" class="btn btn-outline-danger btn-xs">Remove Filters</a>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </section>
+                
+                
+                
+                
                 
                 <div class="sticky-sidebar">
                     <h3 class="sticky-heading">Explore Other Sections</h3>

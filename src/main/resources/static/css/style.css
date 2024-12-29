@@ -160,10 +160,21 @@ button:hover {
 }
 
 .sticky-date-filter .col-4 input[type="month"] {
-    width: 100%;  /* Make the month input boxes fill the available space */
-    padding-left: 0px;  /* Optional: Reduce padding inside the input box */
-    padding-right: 10px; /* Optional: Reduce padding inside the input box */
+    width: 100%;  
+    padding-left: 0px;  
+    padding-right: 10px; 
 }
+
+input[type="month"] {
+    width: 120px;  
+}
+
+.btn-xs {
+    font-size: 0.75rem;  /* Smaller font size */
+    padding: 0.25rem 0.5rem;  /* Smaller padding */
+    line-height: 1.25;  /* Adjust line height for better alignment */
+}
+
 
 .sticky-sidebar {
     position: sticky;
