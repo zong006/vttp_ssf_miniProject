@@ -30,7 +30,8 @@ public class UserController {
     ArticleService articleService;
 
     @GetMapping("/")
-    public String landingPage(){
+    public String landingPage(HttpSession httpSession){
+        httpSession.setAttribute("loggedIn", false);
         return "landingPage";
     }
 
@@ -41,12 +42,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String verifyLogin(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession httpSession, Model model) throws JsonMappingException, JsonProcessingException{
+    public String verifyLogin(@ModelAttribute User user, HttpSession httpSession, Model model) throws JsonMappingException, JsonProcessingException{
 
-        if (bindingResult.hasErrors()){
-            return "loginPage";
-        }
         if (userService.userExists(user.getUsername())){
+            if (!userService.correctPassword(user.getUsername(), user.getPassword())){
+
+                model.addAttribute("errorMessageUser", "Wrong username or password. Please try again.");
+                return "errorPage";
+            }
             List<String> topicsOfInterest = userService.getUserPref(user.getUsername());
             user.setTopicsOfInterest(topicsOfInterest);
             Deque<String> queries = userService.getQueryEntries(user.getUsername());
@@ -54,7 +57,7 @@ public class UserController {
             // need to set user query deque
             // System.out.println(user.toString()); // delete this later
             httpSession.setAttribute("user", user);
-            
+            httpSession.setAttribute("loggedIn", true);
             return "redirect:/latest";
         }
         model.addAttribute("errorMessageUser", "The username you entered does not exist. Please create a new account.");
@@ -95,10 +98,12 @@ public class UserController {
             model.addAttribute("errorMessageUser", "Username already exists. Please choose another username.");
             return "errorPage";
         }
+        userService.registerNewUser(user.getUsername(), user.getPassword());
         // a new user. pass the topics of interest as a list to the service to be processed
         // System.out.println("a new user"); // delete this later
+        
         userService.updateUserPref(user.getUsername(), user.getTopicsOfInterest());
-
+        httpSession.setAttribute("loggedIn", true);
         return "redirect:/latest";
     }
 

@@ -11,7 +11,7 @@
     <header class="sticky-header">
         <div class="header-content container">
             <form th:action="@{/latest}" method="get" >
-                <button type="submit" class="btn btn-primary">Return to Latest News</button>
+                <button type="submit" class="btn btn-outline-light">Return to Latest News</button>
             </form>
             <h1 class="text-white text-center my-3" th:text="${session.headerTitle}"></h1>
             <form th:action="@{/search}" method="GET" class="search-bar d-flex justify-content-center">
@@ -54,15 +54,15 @@
                 <nav th:if="${articles != null && !articles.isEmpty()}" class="mt-4">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:if="${session.latestPage >= 2}">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage-1})}">Prev</a>
+                            <a class="page-link text-white bg-dark" th:href="@{/nextPage(page=${session.latestPage-1})}">Prev</a>
                         </li>
                         <li class="page-item" th:each="page : ${#numbers.sequence(session.latestPage > 5 ? session.latestPage - 5 : 1, 
                             totalPages > session.latestPage + 5 ? session.latestPage + 5 : totalPages)}"
                             th:classappend="${page == session.latestPage ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/nextPage(page=${page})}" th:text="${page}"></a>
+                            <a class="page-link text-white bg-dark" th:href="@{/nextPage(page=${page})}" th:text="${page}"></a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage+1})}">Next</a>
+                            <a class="page-link text-white bg-dark" th:href="@{/nextPage(page=${session.latestPage+1})}">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -70,7 +70,7 @@
                     <h3 th:text="${noArticleMsg}"></h3>
                     <form th:action="@{/latest}" method="get">
                         <input type="hidden" name="page" th:value="${session.latestPage}">
-                        <button class="btn btn-primary mt-3">Back</button>
+                        <button class="btn btn-outline-light mt-3">Back</button>
                     </form>
                 </div>
             </div>

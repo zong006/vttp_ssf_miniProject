@@ -12,16 +12,17 @@
         <div class="header-content container">
             <div class="d-flex flex-column align-items-center gap-2">
                 <form th:action="@{/latest}" method="get" th:if="${session.atSection}">
-                    <button type="submit" class="btn btn-primary">Go to Latest News</button>
+                    <button type="submit" class="btn btn-outline-light">Go to Latest News</button>
                 </form>
                 
                 <form th:action="@{/feed}" method="get" >
-                    <button type="submit" class="btn btn-primary">Go to News Feed</button>
+                    <button type="submit" class="btn btn-outline-light">Go to News Feed</button>
                 </form>
             </div>
             <div>
                 <h1 class="text-white text-center my-3" th:text="${session.headerTitle}"></h1>
-                <h2 class="text-white text-center my-1" th:if="${session.atSection}" th:text=" ${sectionKey}"></h2>
+                <h2 class="text-white text-center my-1" th:text=" ${session.sectionKey}" th:if="${session.atSection}"></h2>
+                <h2 class="text-white text-center my-1" th:text=" ${session.query}" th:if="${session.atQuery}"></h2>
             </div>
             
             <form th:action="@{/search}" method="GET" class="search-bar d-flex justify-content-center">
@@ -64,15 +65,15 @@
                 <nav th:if="${articles != null && !articles.isEmpty()}" class="mt-4">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:if="${session.latestPage >= 2}">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage-1})}">Prev</a>
+                            <a class="page-link text-white bg-dark" th:href="@{/nextPage(page=${session.latestPage-1})}">Prev</a>
                         </li>
                         <li class="page-item" th:each="page : ${#numbers.sequence(session.latestPage > 5 ? session.latestPage - 5 : 1, 
                             totalPages > session.latestPage + 5 ? session.latestPage + 5 : totalPages)}"
                             th:classappend="${page == session.latestPage ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/nextPage(page=${page})}" th:text="${page}"></a>
+                            <a class="page-link text-white bg-dark" th:href="@{/nextPage(page=${page})}" th:text="${page}"></a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/nextPage(page=${session.latestPage+1})}">Next</a>
+                        <li class="page-item ">
+                            <a class="page-link text-white bg-dark" th:href="@{/nextPage(page=${session.latestPage+1})}">Next</a>
                         </li>
                     </ul>
                 </nav>
@@ -88,6 +89,28 @@
             </div>
            <!-- right side -->
             <div class="col-md-4">
+                <section class="sticky-date-filter bg-dark mb-4">
+                    <div class="container">
+                        <form th:action="@{/filterByDate}" method="GET" class="date-filter-form text-center py-1"  th:object="${dateFilter}">
+                            <div class="row justify-content-center">
+                                <h5>Filter articles by date</h5>
+                                <div class="col-4">
+                                    <label for="fromDate" class="text-white small">From:</label>
+                                    <input type="month" id="fromDate" name="fromDate" class="form-control form-control-sm" required>
+                                    <input type="hidden" id="url" name="url" th:value="${session.url}">
+                                </div>
+                                <div class="col-4">
+                                    <label for="toDate" class="text-white small">To:</label>
+                                    <input type="month" id="toDate" name="toDate" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="row mt-3 col-auto">
+                                    <button type="submit" class="btn btn-outline-light btn-sm mt-2">Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                
                 <div class="sticky-sidebar">
                     <h3 class="sticky-heading">Explore Other Sections</h3>
                     <div class="list-group">

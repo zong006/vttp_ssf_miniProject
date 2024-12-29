@@ -50,6 +50,7 @@ public class ArticleController {
         httpSession.setAttribute("searchIsNull", false);
         httpSession.setAttribute("atLatest", true);
         httpSession.setAttribute("atSection", false);
+        httpSession.setAttribute("atQuery", false);
 
         model.addAttribute("articles", latestArticles);
         model.addAttribute("sectionMap", sectionMap);
@@ -71,6 +72,7 @@ public class ArticleController {
         boolean atLatest = (boolean) httpSession.getAttribute("atLatest");
         if (atLatest){
             httpSession.setAttribute("atLatest", false);
+            httpSession.setAttribute("atSection", false);
             httpSession.setAttribute("latestPage", 1);
             
         }
@@ -81,7 +83,12 @@ public class ArticleController {
         // gets articles by section according to articleService.getTopicNumbers, and add them to list of articles to display
         for(String topic : topicNumbers.keySet()){
             String pageSize = String.valueOf(topicNumbers.get(topic));
-            String reccNewsUrl = Util.newsUrl + topic + "?" + Util.newsApiEntry + api_key + Util.newsPageSizeEntry + pageSize + Util.newsPageEntry + Integer.toString(page);
+            StringBuilder sb = new StringBuilder();
+            String reccNewsUrl = sb.append(Util.newsUrl).append(topic).append("?")
+                                    .append(Util.newsApiEntry).append(api_key)
+                                    .append(Util.newsPageSizeEntry).append(pageSize)
+                                    .append(Util.newsPageEntry).append(Integer.toString(page))
+                                    .toString();
             List<Article> articles = articleService.getArticleList(reccNewsUrl); 
             recArticleList.addAll(articles);
         }
@@ -93,7 +100,6 @@ public class ArticleController {
                             + Util.newsPageSizeEntry + Util.queryResultSize 
                             + Util.newsPageEntry + Integer.toString(page);
         List<Article> queryArticles = articleService.getArticleList(queryUrl); 
-        // System.out.println(queryUrl);
         recArticleList.addAll(queryArticles);
 
         recArticleList.sort(Comparator.comparingLong(Article::getDate).reversed());
@@ -139,23 +145,29 @@ public class ArticleController {
         
         User user = (User) httpSession.getAttribute("user");
         userService.updateUserPref(user.getUsername(), Collections.singletonList(sectionId));
-        
+        // set atLatest = true even when browsing a particular section
+        httpSession.setAttribute("atLatest", true);
+        httpSession.setAttribute("atSection", true);
+        httpSession.setAttribute("atQuery", false);
+
         String sectionUrl = Util.newsUrl + Util.newsSearchQuery + Util.newsSectionEntry +  sectionId + Util.newsApiEntry + api_key + Util.newsPageSizeEntry + Util.newsPageSize + Util.newsPageEntry + Integer.toString(page);
         
         List<Article> articles = articleService.getArticleList(sectionUrl); 
+        if (articles.size()==0){
+            model.addAttribute("errorMessageUser", "Sorry, no articles found for this topic.");
+            return "errorPage";
+        }
         int totalPages = articles.get(0).getPages();
         Map<String, String> sectionMap = articleService.getSections();
         model.addAttribute("articles", articles);
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("sectionKey", sectionKey);
-
+        
         httpSession.setAttribute("headerTitle", "Showing articles about: ");
+        httpSession.setAttribute("sectionKey", sectionKey);
         httpSession.setAttribute("url", sectionUrl);
         httpSession.setAttribute("latestPage", page);
-        // set atLatest = true even when browsing a particular section
-        httpSession.setAttribute("atSection", true);
-    
+        
         // System.out.println(sectionUrl);
         return "latestNews";
     }
@@ -181,13 +193,18 @@ public class ArticleController {
         queryArticles.sort(Comparator.comparingLong(Article::getDate).reversed());
 
         httpSession.setAttribute("url", queryUrl);
-        httpSession.setAttribute("headerTitle", "Showing articles about: " + query);
+        httpSession.setAttribute("headerTitle", "Showing articles about: ");
         httpSession.setAttribute("latestPage", searchPage);
+        httpSession.setAttribute("atLatest", true);
+        httpSession.setAttribute("atSection", false);
+        httpSession.setAttribute("atQuery", true);
+        httpSession.setAttribute("query", query);
 
         Map<String, String> sectionMap = articleService.getSections();
         model.addAttribute("articles", queryArticles);
         model.addAttribute("sectionMap", sectionMap);
         model.addAttribute("totalPages", totalPages);
+        
         
         // save query to track user interests. want to create a deque of fixed length to only track the latest X number of queries
         if (queryArticles.size()!=0){
@@ -207,7 +224,7 @@ public class ArticleController {
         return "latestNews";
     }
 
-    @GetMapping("/nextPage") // shared by both latest news and search page
+    @GetMapping("/nextPage") // shared by both latest news and search page. as well as newsfeed and sections.
     public String getNextPage(@RequestParam(defaultValue = "1") int page, Model model, HttpSession httpSession) throws ParseException, IOException{
 
         boolean atLatest = (boolean) httpSession.getAttribute("atLatest");
@@ -215,19 +232,76 @@ public class ArticleController {
         String sessionUrl = (String) httpSession.getAttribute("url");
         int pageIndex = sessionUrl.indexOf("&page=");
         String url = sessionUrl.substring(0, pageIndex) + Util.newsPageEntry + Integer.toString(page);
+        
         httpSession.setAttribute("latestPage", page);
         if (atLatest){
-            List<Article> articles = articleService.getArticleList(url + Integer.toString(page));
+            List<Article> articles = articleService.getArticleList(url);
             int totalPages = articles.get(0).getPages();
             Map<String, String> sectionMap = articleService.getSections();
             model.addAttribute("sectionMap", sectionMap);
-
             model.addAttribute("articles", articles);
             model.addAttribute("totalPages", totalPages);
+
+            httpSession.setAttribute("url", url);
 
             // System.out.println(url); 
             return "latestNews";
         }
         return "redirect:/feed";
+    }
+
+    @GetMapping("/filterByDate")
+    public String filterArticlesByDate(HttpSession httpSession, 
+                                        Model model,
+                                        @RequestParam(value = "fromDate") String fromDate,
+                                        @RequestParam(value = "toDate") String toDate,
+                                        @RequestParam("url") String url) throws ParseException, IOException{
+                        
+        String sessionUrl = (String) httpSession.getAttribute("url");
+        
+        int page = (int) httpSession.getAttribute("latestPage");
+        if (page==1){
+            sessionUrl += Integer.toString(page);
+        }
+        else{ // if filter articles by date, bring it back to page 1 instead of the filtered list
+            int pageIndex = sessionUrl.indexOf("&page=");
+            sessionUrl = sessionUrl.substring(0, pageIndex) + Util.newsPageEntry + "1";
+            httpSession.setAttribute("latestPage", 1);
+        }
+        StringBuilder sb = new StringBuilder();
+        String filteredUrl = sb.append(sessionUrl)
+                    .append(Util.newsFromDate).append(fromDate).append("-01")
+                    .append(Util.newsToDate).append(toDate).append("-01")
+                    .toString();
+        
+        List<Article> filtredArticles = articleService.getArticleList(filteredUrl);
+        if (filtredArticles.size()==0){
+            model.addAttribute("errorMessageUser", "No articles found within that date range.");
+            return "errorPage";
+        }
+        int totalPages = filtredArticles.get(0).getPages();
+        Map<String, String> sectionMap = articleService.getSections();
+
+        boolean atSection = (boolean) httpSession.getAttribute("atSection");
+        boolean atQuery = (boolean) httpSession.getAttribute("atQuery");
+        String headerTitle;
+        if (atSection || atQuery){
+            headerTitle = "Showing articles about: ";
+        }
+        else {
+            headerTitle = "Latest News";
+        }
+        httpSession.setAttribute("headerTitle", headerTitle);
+        model.addAttribute("filter", "From " + fromDate + " To " + toDate);
+        
+        model.addAttribute("articles", filtredArticles);
+        model.addAttribute("sectionMap", sectionMap);
+        model.addAttribute("totalPages", totalPages);
+
+
+        // System.out.println(filteredUrl);
+        
+
+        return "latestNews";
     }
 }

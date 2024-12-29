@@ -30,6 +30,15 @@ public class UserService {
         return userPrefRepo.userExists(username);
     }
 
+    public void registerNewUser(String username, String password){
+        userPrefRepo.saveUserInfo(Util.credentials, username, password);
+    }
+
+    public boolean correctPassword(String username, String password){
+        String savedPassword = userPrefRepo.getUserInfo(Util.credentials, username);
+        return (savedPassword.equals(password))? true : false;
+    }
+
     // for section counts
     public List<String> getUserPref(String username) throws JsonMappingException, JsonProcessingException{
         Map<String, Integer> topicCount = getTopicCount(username);

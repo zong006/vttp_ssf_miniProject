@@ -2,6 +2,7 @@ package vttp.ssf_mini_project.util;
 
 public interface Util {
 
+    String credentials = "mini_proj_credentials";
     String interests = "mini_proj_interests";
     String queries = "mini_proj_queries";
 
@@ -15,6 +16,9 @@ public interface Util {
     String newsApiEntry = "&api-key=";
     String newsSearchQueryEntry = "&q=";
     String newsSectionEntry = "&section=";
+
+    String newsFromDate = "&from-date=";
+    String newsToDate = "&to-date=";
 
     int queryHistMaxSize = 5;
 

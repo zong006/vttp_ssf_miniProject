@@ -15,12 +15,14 @@
             <form th:action="@{/login}" method="post" th:object="${user}" class="login-form">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username:</label>
-                    <input type="text" id="username" name="username" class="form-control form-control-custom" placeholder="Enter your username" required>
+                    <input type="text" id="username" name="username" class="form-control  w-100" placeholder="Enter your username" required>
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" class="form-control  w-100" placeholder="Enter your password" required>
                     <div class="invalid-feedback">
                         <p data-th-if="*{#fields.hasErrors('username')}" data-th-errors="*{username}" class="error"></p>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
+                <button type="submit" class="btn btn-outline-light w-100">Login</button>
             </form>
         </div>
     </div>

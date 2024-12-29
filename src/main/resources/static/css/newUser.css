@@ -36,11 +36,15 @@ label {
     margin-left: 8px; 
 }
 
-label[for="username"] {
+label[for="username"]{
     font-size: 18px; 
     font-weight: bold; 
 }
 
+label[for="password"]{
+    font-size: 18px; 
+    font-weight: bold; 
+}
 
 form {
     z-index: 2;
@@ -114,4 +118,13 @@ button {
     border-radius: 10px; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     margin-bottom: 20px; 
+}
+
+input[type="text"], input[type="password"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 80%; 
+    max-width: 400px; 
+    box-sizing: border-box; 
+    height: fit-content;
 }

@@ -15,6 +15,17 @@ public class User {
     @Size(min = 1, message = "Please select at least one topic of interest.")
     private List<String> topicsOfInterest;
 
+    @Size(min = 5, max = 30, message = "Password must be between 5 to 30 characters in length.")
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     private Deque<String> queryHist;
 
     public User() {
