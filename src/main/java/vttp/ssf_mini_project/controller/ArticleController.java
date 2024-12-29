@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -39,9 +38,12 @@ public class ArticleController {
     @GetMapping("/latest")
     public String displayLatestArticles(@RequestParam(defaultValue = "1") int page, Model model, HttpSession httpSession) throws ParseException, IOException{
         
-        String latestNewsUrl = Util.newsUrl + Util.newsSearchQuery + Util.newsApiEntry + api_key + Util.newsPageSizeEntry + Util.newsPageSize + Util.newsPageEntry;
+        String latestNewsUrl = Util.newsUrl + Util.newsSearchQuery 
+                                + Util.newsApiEntry + api_key 
+                                + Util.newsPageSizeEntry + Util.newsPageSize 
+                                + Util.newsPageEntry + Integer.toString(page);
         
-        List<Article> latestArticles = articleService.getArticleList(latestNewsUrl + Integer.toString(page));
+        List<Article> latestArticles = articleService.getArticleList(latestNewsUrl);
         int totalPages = latestArticles.get(0).getPages();
 
         Map<String, String> sectionMap = articleService.getSections();
@@ -113,10 +115,10 @@ public class ArticleController {
         // show reccomended topics to user based on other similar users
         Map<String, String> topicsToRec = articleService.getRecTopic(user.getUsername());
 
-        if (topicsToRec.isEmpty()){
-            System.out.println("emty rec topic map");
+        // if (topicsToRec.isEmpty()){
+        //     System.out.println("emty rec topic map");
 
-        } 
+        // } 
         model.addAttribute("topicsToRec", topicsToRec);
         httpSession.setAttribute("headerTitle", "News Feed");
 
@@ -319,7 +321,7 @@ public class ArticleController {
         httpSession.setAttribute("url", filteredUrl);
 
 
-        System.out.println(filteredUrl);
+        // System.out.println(filteredUrl);
         
 
         return "latestNews";
