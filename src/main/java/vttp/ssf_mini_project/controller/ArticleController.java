@@ -230,13 +230,21 @@ public class ArticleController {
         String sessionUrl = (String) httpSession.getAttribute("url");
         
         int pageIndex = sessionUrl.indexOf("&page=");
-        int filterIndex = sessionUrl.indexOf("&from-date=");
-        String url = sessionUrl.substring(0, pageIndex) 
-                        + Util.newsPageEntry + Integer.toString(page)
-                        + sessionUrl.substring(filterIndex, sessionUrl.length());
-        
         httpSession.setAttribute("latestPage", page);
+
         if (atLatest){
+            int filterIndex = sessionUrl.indexOf("&from-date=");
+            String url;
+            if (filterIndex==-1){
+                url = sessionUrl.substring(0, pageIndex) 
+                            + Util.newsPageEntry + Integer.toString(page);
+            }
+            else {
+                url = sessionUrl.substring(0, pageIndex) 
+                            + Util.newsPageEntry + Integer.toString(page)
+                            + sessionUrl.substring(filterIndex, sessionUrl.length());
+            }
+        
             List<Article> articles = articleService.getArticleList(url);
             int totalPages = articles.get(0).getPages();
             Map<String, String> sectionMap = articleService.getSections();
@@ -302,7 +310,7 @@ public class ArticleController {
         httpSession.setAttribute("url", filteredUrl);
 
 
-        System.out.println(filteredUrl);
+        // System.out.println(filteredUrl);
         
 
         return "latestNews";
