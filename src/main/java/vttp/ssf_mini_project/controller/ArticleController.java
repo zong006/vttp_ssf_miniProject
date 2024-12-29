@@ -193,27 +193,27 @@ public class ArticleController {
                                 Util.newsPageEntry;
 
         List<Article> queryArticles = articleService.getArticleList(queryUrl + Integer.toString(searchPage));
-        
-        int totalPages = queryArticles.get(0).getPages();
-        queryArticles.sort(Comparator.comparingLong(Article::getDate).reversed());
+        if (queryArticles.size()!=0){  
+            // System.out.println("not empty");
+            int totalPages = queryArticles.get(0).getPages();
+            queryArticles.sort(Comparator.comparingLong(Article::getDate).reversed());
 
-        httpSession.setAttribute("url", queryUrl);
-        httpSession.setAttribute("headerTitle", "Search: ");
-        httpSession.setAttribute("latestPage", searchPage);
-        httpSession.setAttribute("atLatest", true);
-        httpSession.setAttribute("atSection", false);
-        httpSession.setAttribute("atQuery", true);
-        httpSession.setAttribute("query", query);
-        httpSession.removeAttribute("filter");
+            httpSession.setAttribute("url", queryUrl);
+            httpSession.setAttribute("headerTitle", "Search: ");
+            httpSession.setAttribute("latestPage", searchPage);
+            httpSession.setAttribute("atLatest", true);
+            httpSession.setAttribute("atSection", false);
+            httpSession.setAttribute("atQuery", true);
+            httpSession.setAttribute("query", query);
+            httpSession.removeAttribute("filter");
 
-        Map<String, String> sectionMap = articleService.getSections();
-        model.addAttribute("articles", queryArticles);
-        model.addAttribute("sectionMap", sectionMap);
-        model.addAttribute("totalPages", totalPages);
+            
+            model.addAttribute("articles", queryArticles);
+            model.addAttribute("totalPages", totalPages);
         
         
-        // save query to track user interests. want to create a deque of fixed length to only track the latest X number of queries
-        if (queryArticles.size()!=0){
+        // save     query to track user interests. want to create a deque of fixed length to only track the latest X number of queries
+        
             User user = (User) httpSession.getAttribute("user");
             user.addQuery(query);
             // System.out.println(user.getQueryHist());
@@ -221,10 +221,12 @@ public class ArticleController {
             httpSession.setAttribute("searchIsNull", false);
         }
         else{
+            // System.out.println("is empty");
             httpSession.setAttribute("searchIsNull", true);
             model.addAttribute("noArticleMsg", "No search results found for: " + query);   
         }
-        
+        Map<String, String> sectionMap = articleService.getSections();
+        model.addAttribute("sectionMap", sectionMap);
 
         // System.out.println(queryUrl); 
         return "latestNews";
