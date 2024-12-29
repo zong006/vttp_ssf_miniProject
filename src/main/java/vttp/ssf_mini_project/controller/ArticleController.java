@@ -77,8 +77,6 @@ public class ArticleController {
             
         }
         page = (int) httpSession.getAttribute("latestPage");
-        // System.out.println(page);
-        // System.out.println(httpSession.getAttribute("latestPage"));
 
         // gets articles by section according to articleService.getTopicNumbers, and add them to list of articles to display
         for(String topic : topicNumbers.keySet()){
@@ -230,8 +228,12 @@ public class ArticleController {
         boolean atLatest = (boolean) httpSession.getAttribute("atLatest");
         
         String sessionUrl = (String) httpSession.getAttribute("url");
+        
         int pageIndex = sessionUrl.indexOf("&page=");
-        String url = sessionUrl.substring(0, pageIndex) + Util.newsPageEntry + Integer.toString(page);
+        int filterIndex = sessionUrl.indexOf("&from-date=");
+        String url = sessionUrl.substring(0, pageIndex) 
+                        + Util.newsPageEntry + Integer.toString(page)
+                        + sessionUrl.substring(filterIndex, sessionUrl.length());
         
         httpSession.setAttribute("latestPage", page);
         if (atLatest){
@@ -300,7 +302,7 @@ public class ArticleController {
         httpSession.setAttribute("url", filteredUrl);
 
 
-        // System.out.println(filteredUrl);
+        System.out.println(filteredUrl);
         
 
         return "latestNews";
